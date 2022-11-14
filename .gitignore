@@ -1,0 +1,6 @@
+book.sqlite
+venv/
+__pycache__/
+.vscode
+.DS_Store
+secret.py
