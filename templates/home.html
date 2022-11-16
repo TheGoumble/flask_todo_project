@@ -1,9 +1,20 @@
-{% extends 'base.html' %}
-
-{% block head %}
-
-{% endblock %}
-
-{% block body %}
-<h1>this is the home page</h1>
+{% extends 'base.html' %} {% block head %} {% endblock %} {% block body %}
+<div>
+  <h2>Your Todo list</h2>
+  <table>
+    <tr>
+        <th>Task</th>
+        <th>Added</th>
+        <th>Actions</th>
+    </tr>
+    <tr>
+        <td></td>
+        <td></td>
+        <td>
+            <a href="">Delete</a>
+            <a href="">Update</a>
+        </td>
+    </tr>
+  </table>
+</div>
 {% endblock %}
