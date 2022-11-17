@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flask To-do</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
     {% block head %}{% endblock %}
-</head>
-<body>
-    <header >
-        <h1>
-            To-do Flask
-        </h1>
-        <button>Login</button>
+  </head>
+  <body>
+    <header>
+      <h1>To-do Flask</h1>
+      <button>Login</button>
     </header>
 
-   {% block body %}{% endblock %}
+    <div id="page-container">
+      <div id="content-wrap">{% block body %}{% endblock %}</div>
 
-    <Footer>
-        <p>&copy;2022 by Javier Andres Vargas </p>
-    </Footer>
-</body>
+      <footer>
+        <p>&copy;2022 by Javier Andres Vargas</p>
+
+        <a
+          href="https://github.com/TheGoumble/flask_todo_project"
+          target="-blank"
+        >
+          <img
+            src="{{url_for('static', filename='png/GitHub.png')}}"
+            alt="Link to the GitHub repo"
+          />
+        </a>
+        
+      </footer>
+    </div>
+  </body>
 </html>
