@@ -1,0 +1,87 @@
+{% extends 'base.html' %} {% block head %}
+<!-- Put *user's* todo -->
+{% endblock %} {% block body %}
+
+<div>
+  <div id="h2-button">
+    <h2>Your Todo list</h2>
+    {% if current_user.is_authenticated %}
+    <a href="{{url_for('new_task')}}" type="button" class="btn btn-primary"
+      >Add Task</a
+    >
+    {% endif %}
+  </div>
+  {% if tasks|length < 1 %}
+  <div><p>There are no task. Start one at anytime!</p></div>
+  {% else %}
+  <div>
+    {% for task in tasks%}
+    <div class="card" style="width: 18rem">
+      <div class="card-body">
+        <h5 class="card-title">{{task.title}}</h5>
+
+        <p class="card-text">Due {{task.due_date.strftime('%m-%d-%Y')}}</p>
+        <p class="card-text">{{ task.content }}</p>
+
+        <button
+          type="button"
+          class="btn btn-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#modal{{task.todo_id}}"
+        >
+          Delete
+        </button>
+        {% if task.author == current_user %}
+        <a
+          href="{{url_for('update_task', task_id=task.todo_id)}}"
+          class="btn btn-primary"
+          >Update</a
+        >
+        {% endif %}
+        <p class="text-muted">
+          Created {{ task.date_created.strftime('%m-%d-%Y') }}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+
+{% for task in tasks%}
+<!-- Delete Modal -->
+<div
+  class="modal"
+  id="modal{{ task.todo_id }}"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Task?</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <form
+          action="{{url_for('delete_task', remove_id=task.todo_id)}}"
+          method="POST"
+        >
+          <input class="btn btn-danger" type="submit" value="Delete" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<!-- for future modal implements -->
+{% block modal %}{% endblock %} {% endblock %}

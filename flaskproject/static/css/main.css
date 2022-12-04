@@ -1,0 +1,72 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  margin: 0;
+}
+
+body {
+  background-color: #2f3c7e;
+  position: relative;
+  min-height: 100vh;
+}
+
+header {
+  background-color: #f6d2e0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: top;
+  height: 15%;
+  width: 100%;
+}
+
+header > h1,
+div {
+  margin: 1%;
+}
+
+#profile-pic{
+  height: 65px;
+  width: 65;
+}
+
+body > section {
+  padding-bottom: 5.5rem;
+  padding-right: 40px;
+  padding-left: 40px;
+}
+#h2-button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+footer {
+  background-color: #f6d2e0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 5.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer > a,
+p {
+  margin: 1%;
+}
+
+footer > a > img {
+  width: 80px;
+}
+
+a {
+  text-decoration: none;
+}
+
