@@ -4,84 +4,188 @@
 
 <div>
   <div id="h2-button">
-    <h2>Your Todo list</h2>
     {% if current_user.is_authenticated %}
+    <h2>{{current_user.first_name}}'s Todo list</h2>
     <a href="{{url_for('new_task')}}" type="button" class="btn btn-primary"
       >Add Task</a
     >
     {% endif %}
   </div>
-  {% if tasks|length < 1 %}
-  <div><p>There are no task. Start one at anytime!</p></div>
+
+  <div class="dropdown">
+    <button
+      class="btn btn-secondary dropdown-toggle"
+      type="button"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      Sort
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="{{ url_for('close_due') }}">Closest Due!</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('newest') }}">Newest</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('oldest') }}">Oldest</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('completed') }}">Completed</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('uncompleted') }}">Uncompleted</a></li>
+    </ul>
+  </div>
+
+  {% if tasks.items|length < 1 %}
+
+  <div id="welcome">
+    <p class="h2">Welcome to To-do Flask!</p>
+    <p class="h3">Make an account today!</p>
+    <p class="h3">Track every task in your busy life and never lose track!</p>
+  </div>
+
   {% else %}
-  <div>
-    {% for task in tasks%}
-    <div class="card" style="width: 18rem">
-      <div class="card-body">
-        <h5 class="card-title">{{task.title}}</h5>
 
-        <p class="card-text">Due {{task.due_date.strftime('%m-%d-%Y')}}</p>
-        <p class="card-text">{{ task.content }}</p>
+  <div class="row">
+    {% for task in tasks.items %}
 
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-bs-toggle="modal"
-          data-bs-target="#modal{{task.todo_id}}"
-        >
-          Delete
-        </button>
-        {% if task.author == current_user %}
-        <a
-          href="{{url_for('update_task', task_id=task.todo_id)}}"
-          class="btn btn-primary"
-          >Update</a
-        >
-        {% endif %}
-        <p class="text-muted">
-          Created {{ task.date_created.strftime('%m-%d-%Y') }}
-        </p>
+    <div class="col-10 col-md-5 col-lg-3">
+      <div class="card" style="width: 18rem">
+        {% if task.completed == true %}
+        <div class="card-body bg-opacity-50 bg-success rounded">
+          {% else %}
+          <div class="card-body">
+            {% endif %} {% if task.completed == true %}
+            <h5 class="card-title">{{task.title}} Completed!</h5>
+            {% else %}
+            <h5 class="card-title">{{task.title}}</h5>
+            {% endif %}
+            <p class="card-text">Due: {{task.due_date.strftime('%m/%d/%Y')}}</p>
+            <p class="card-text">Task: {{ task.content }}</p>
+
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-toggle="modal"
+              data-bs-target="#modal{{task.todo_id}}"
+            >
+              Delete
+            </button>
+            {% if task.completed != true %} {% if task.author == current_user %}
+            <a
+              href="{{url_for('update_task', task_id=task.todo_id)}}"
+              class="btn btn-primary"
+              >Update</a
+            >
+            {% endif %} {% endif %}
+            <p class="text-muted">
+              Created {{ task.date_created.strftime('%m/%d/%Y') }}
+            </p>
+            {% if task.completed != true %}
+            <button
+              type="button"
+              class="btn btn-success"
+              data-bs-toggle="modal"
+              data-bs-target="#modal_complete{{task.todo_id}}"
+            >
+              Complete
+            </button>
+
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    {% for page_num in tasks.iter_pages(left_edge=1, right_edge=1,
+    left_current=1, right_current=1) %} {% if page_num %} {% if tasks.page ==
+    page_num%}
+    <a class="btn btn-info mb-4" href="{{ url_for('home', page=page_num) }}"
+      >{{ page_num}}</a
+    >
+    {% else %}
+    <a
+      class="btn btn-outline-info mb-4"
+      href="{{ url_for('home', page=page_num) }}"
+      >{{ page_num}}</a
+    >
+    {% endif %} {% else %} ...{% endif %} {% endfor %} {% endif %}
+  </div>
+
+  {% for task in tasks.items%}
+  <!-- Delete Modal -->
+  <div
+    class="modal"
+    id="modal{{ task.todo_id }}"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Task?</h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <form
+            action="{{url_for('delete_task', remove_id=task.todo_id)}}"
+            method="POST"
+          >
+            <input class="btn btn-danger" type="submit" value="Delete" />
+          </form>
+        </div>
       </div>
     </div>
-    {% endfor %}
   </div>
-  {% endif %}
-</div>
 
-{% for task in tasks%}
-<!-- Delete Modal -->
-<div
-  class="modal"
-  id="modal{{ task.todo_id }}"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Task?</h1>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-        <form
-          action="{{url_for('delete_task', remove_id=task.todo_id)}}"
-          method="POST"
-        >
-          <input class="btn btn-danger" type="submit" value="Delete" />
-        </form>
+  <!-- Complete Modal -->
+  <div
+    class="modal"
+    id="modal_complete{{ task.todo_id }}"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">
+            Complete Task?
+          </h1>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+          <form
+            action="{{url_for('complete_task', complete_id=task.todo_id)}}"
+            method="POST"
+          >
+            <input class="btn btn-success" type="submit" value="Complete" />
+          </form>
+        </div>
       </div>
     </div>
   </div>
+  {% endfor %}
+  <!-- for future modal implements -->
+  {% block modal %}{% endblock %} {% endblock %}
 </div>
-{% endfor %}
-<!-- for future modal implements -->
-{% block modal %}{% endblock %} {% endblock %}

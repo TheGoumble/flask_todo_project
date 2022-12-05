@@ -11,13 +11,13 @@ from flask_login import login_user, logout_user, current_user, login_required
 @app.route("/")
 @app.route("/home", methods=["POST", "GET"])
 def home():
+    page = request.args.get('page', 1, type=int)
     tasks = []
     if current_user.is_authenticated:
-        tasks = ToDO.query.filter_by(author=current_user).all()
+        tasks = ToDO.query.filter_by(author=current_user).order_by(ToDO.date_created.desc()).paginate(page=page,per_page=9)
         image_file = url_for(
             'static', filename='profile_pics/' + current_user.image_file)
     else:
-
         image_file = url_for('static', filename='profile_pics/default.png')
     return render_template("home.html", tasks=tasks, image_file=image_file)
 
@@ -101,6 +101,13 @@ def account():
 @login_required
 def new_task():
     form = TaskForm()
+    if current_user.is_authenticated:
+        tasks = ToDO.query.filter_by(author=current_user).all()
+        image_file = url_for(
+            'static', filename='profile_pics/' + current_user.image_file)
+    else:
+        image_file = url_for('static', filename='profile_pics/default.png')
+
     if form.validate_on_submit():
         task = ToDO(title=form.title.data, content=form.content.data,
                     due_date=form.due_date.data, author=current_user)
@@ -108,7 +115,7 @@ def new_task():
         db.session.commit()
         flash('Your post has been created', 'success')
         return redirect(url_for('home'))
-    return render_template('task.html', title='Add Task', form=form, legend='Add Task')
+    return render_template('task.html', title='Add Task', form=form, legend='Add Task', image_file=image_file)
 
 
 @app.route("/update/<int:task_id>", methods=["POST", "GET"])
@@ -142,3 +149,76 @@ def delete_task(remove_id):
     db.session.commit()
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('home'))
+
+@app.route("/complete/<int:complete_id>", methods=["POST"])
+@login_required
+def complete_task(complete_id):
+    task = ToDO.query.get_or_404(complete_id)
+    if task.author != current_user:
+        abort(403)
+    task.completed = True
+    db.session.commit()
+    
+    db.session.commit()
+    flash('Your post has been marked as compelete!', 'success')
+    return redirect(url_for('home'))
+
+@app.route("/home/closedue", methods=["POST", "GET"])
+def close_due():
+    page = request.args.get('page', 1, type=int)
+    tasks = []
+    if current_user.is_authenticated:
+        tasks = ToDO.query.filter_by(author=current_user).order_by(ToDO.due_date.asc()).paginate(page=page,per_page=9)
+        image_file = url_for(
+            'static', filename='profile_pics/' + current_user.image_file)
+    else:
+        image_file = url_for('static', filename='profile_pics/default.png')
+    return render_template("home.html", tasks=tasks, image_file=image_file)
+
+@app.route("/home/newest", methods=["POST", "GET"])
+def newest():
+    page = request.args.get('page', 1, type=int)
+    tasks = []
+    if current_user.is_authenticated:
+        tasks = ToDO.query.filter_by(author=current_user).order_by(ToDO.date_created.desc()).paginate(page=page,per_page=9)
+        image_file = url_for(
+            'static', filename='profile_pics/' + current_user.image_file)
+    else:
+        image_file = url_for('static', filename='profile_pics/default.png')
+    return render_template("home.html", tasks=tasks, image_file=image_file)
+
+@app.route("/home/oldest", methods=["POST", "GET"])
+def oldest():
+    page = request.args.get('page', 1, type=int)
+    tasks = []
+    if current_user.is_authenticated:
+        tasks = ToDO.query.filter_by(author=current_user).order_by(ToDO.date_created.asc()).paginate(page=page,per_page=9)
+        image_file = url_for(
+            'static', filename='profile_pics/' + current_user.image_file)
+    else:
+        image_file = url_for('static', filename='profile_pics/default.png')
+    return render_template("home.html", tasks=tasks, image_file=image_file)
+
+@app.route("/home/completed", methods=["POST", "GET"])
+def completed():
+    page = request.args.get('page', 1, type=int)
+    tasks = []
+    if current_user.is_authenticated:
+        tasks = ToDO.query.filter_by(author=current_user).order_by(ToDO.completed.desc()).paginate(page=page,per_page=9)
+        image_file = url_for(
+            'static', filename='profile_pics/' + current_user.image_file)
+    else:
+        image_file = url_for('static', filename='profile_pics/default.png')
+    return render_template("home.html", tasks=tasks, image_file=image_file)
+
+@app.route("/home/uncompleted", methods=["POST", "GET"])
+def uncompleted():
+    page = request.args.get('page', 1, type=int)
+    tasks = []
+    if current_user.is_authenticated:
+        tasks = ToDO.query.filter_by(author=current_user).order_by(ToDO.completed.asc()).paginate(page=page,per_page=9)
+        image_file = url_for(
+            'static', filename='profile_pics/' + current_user.image_file)
+    else:
+        image_file = url_for('static', filename='profile_pics/default.png')
+    return render_template("home.html", tasks=tasks, image_file=image_file)
