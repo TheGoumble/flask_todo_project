@@ -1,67 +1,68 @@
 {% extends 'base.html' %} {% block head %} {% endblock %} {% block body %}
 <div>
-  <img id="profile-pic" class="rounded-circle" src="{{ image_file }}" alt="user profile picture" />
-  <div>
-    <h2>{{ current_user.username }}</h2>
-    <p>{{ current_user.first_name }} {{ current_user.last_name }}</p>
+  <div id="profile">
+    <img
+      id="profile-pic"
+      class="rounded-circle"
+      src="{{ image_file }}"
+      alt="user profile picture"
+    />
+    <p class="h1">Username: {{ current_user.username }}</p>
+    <p class="h2">Full Name: {{ current_user.first_name }} {{ current_user.last_name }}</p>
   </div>
 
-
-  <form action="" method="POST" enctype="multipart/form-data">
-    {{ form.hidden_tag() }}
-    <fieldset class="form-group">
+  <div class="form">
+    <form action="" method="POST" enctype="multipart/form-data">
+      {{ form.hidden_tag() }}
+      <fieldset class="form-group">
         <legend>Account Info</legend>
-      <div class="form-group">
-        {{form.first_name.label(class="form-control-label")}} {% if
-        form.first_name.errors %} {{ form.first_name(class="form-control
-        form-control-lg is-invalid") }}
-        <div class="invalid-feedback">
-          {% for error in form.first_name.errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
-        </div>
-        {% else %} {{ form.first_name(class="form-control form-control-lg") }}
-        {% endif %}
-      </div>
-
-      <div class="form-group">
-        {{form.last_name.label(class="form-control-label")}} {% if
-        form.last_name.errors %} {{ form.last_name(class="form-control
-        form-control-lg is-invalid") }}
-        <div class="invalid-feedback">
-          {% for error in form.last_name.errors %}
-          <span>{{ error }}</span>
-          {% endfor %}
-        </div>
-        {% else %} {{ form.last_name(class="form-control form-control-lg")}} {%
-        endif %}
-      </div>
-
-      <div class="form-group">
-        {{form.username.label(class="form-control-label")}} {% if
-        form.username.errors %} {{ form.username(class="form-control
-        form-control-lg is-invalid") }}
-        <div class="invalid-feedback">
-          {% for error in form.username.errors %}
-          <span>{{ error }}</span>
-          {% endfor%}
-        </div>
-        {% else %} {{ form.username(class="form-control form-control-lg")}} {%
-        endif %}
-      </div>
-      <div class="form-group">
-        {{form.picture.label()}}
-        {{form.picture(class="form-control-file")}}
-        {% if form.picture.errors %}
-            {% for error in form.picture.errors %}
-            <span class="test-danger">{{ error }}</span>
+        <div class="form-group">
+          {{form.first_name.label(class="form-control-label")}} {% if
+          form.first_name.errors %} {{ form.first_name(class="form-control
+          form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.first_name.errors %}
+            <span>{{ error }}</span>
             {% endfor %}
-        {% endif %}
-
+          </div>
+          {% else %} {{ form.first_name(class="form-control form-control-lg") }}
+          {% endif %}
         </div>
-      </div>
-    </fieldset>
-    <div class="form-group">{{ form.submit(class="btn btn-outline-info")}}</div>
-  </form>
+
+        <div class="form-group">
+          {{form.last_name.label(class="form-control-label")}} {% if
+          form.last_name.errors %} {{ form.last_name(class="form-control
+          form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.last_name.errors %}
+            <span>{{ error }}</span>
+            {% endfor %}
+          </div>
+          {% else %} {{ form.last_name(class="form-control form-control-lg")}}
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          {{form.username.label(class="form-control-label")}} {% if
+          form.username.errors %} {{ form.username(class="form-control
+          form-control-lg is-invalid") }}
+          <div class="invalid-feedback">
+            {% for error in form.username.errors %}
+            <span>{{ error }}</span>
+            {% endfor%}
+          </div>
+          {% else %} {{ form.username(class="form-control form-control-lg")}} {%
+          endif %}
+        </div>
+        <div class="form-group">
+          {{form.picture.label()}} {{form.picture(class="form-control-file")}}
+          {% if form.picture.errors %} {% for error in form.picture.errors %}
+          <span class="test-danger">{{ error }}</span>
+          {% endfor %} {% endif %}
+        </div>
+      </fieldset>
+      <div class="form-group">{{ form.submit(class="btn btn-dark")}}</div>
+    </form>
+  </div>
 </div>
 {% endblock %}

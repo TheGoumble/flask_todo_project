@@ -11,13 +11,14 @@ html {
 }
 
 body {
-  background-color: #2d5860;
+  background-color: #d6fff6;
+  color: #231651;
   position: relative;
   min-height: 100vh;
 }
 
 header {
-  background-color: gray;
+  background-color: #4dccbd;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -47,7 +48,7 @@ body > section {
   align-items: center;
 }
 footer {
-  background-color: gray;
+  background-color: #4dccbd;
   position: absolute;
   bottom: 0;
   width: 100%;
@@ -75,5 +76,17 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: black;
+}
+
+.form {
+  background-color: #4dccbd;
+  border-radius: 15px;
+  padding: 10px 30px;
+  margin-bottom: 20px;
+}
+
+#profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

@@ -12,6 +12,7 @@ pip (or pip3) install -r requirements.txt (this depends on how your system is se
 
 ## Create Date Base
 
+Get into the pyhon termial and input the following
 ```
 from flaskproject import db
 from flaskproject.models import User, ToDO

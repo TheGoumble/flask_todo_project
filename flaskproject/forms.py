@@ -58,4 +58,4 @@ class TaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
     due_date = DateField('Due Date', validators=[DataRequired()])
-    submit = SubmitField('Task')
+    submit = SubmitField('Submit')

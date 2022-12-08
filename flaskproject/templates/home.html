@@ -1,16 +1,21 @@
 {% extends 'base.html' %} {% block head %}
 <!-- Put *user's* todo -->
-{% endblock %} {% block body %}
-
+{% endblock %} {% block body %} 
+{% if current_user.is_authenticated %}
 <div>
   <div id="h2-button">
-    {% if current_user.is_authenticated %}
     <h2>{{current_user.first_name}}'s Todo list</h2>
     <a href="{{url_for('new_task')}}" type="button" class="btn btn-primary"
       >Add Task</a
     >
-    {% endif %}
   </div>
+  {% if tasks.items|length < 1 %}
+  <div id="welcome">
+    <p class="h2">No Taskes Created</p>
+    <p class="h3">Create your first Task using the Add Task Buttom</p>
+    <p class="h3">Track every task in your busy life and never lose track!</p>
+  </div>
+  {% else %}
 
   <div class="dropdown">
     <button
@@ -22,24 +27,27 @@
       Sort
     </button>
     <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="{{ url_for('close_due') }}">Closest Due!</a></li>
-      <li><a class="dropdown-item" href="{{ url_for('newest') }}">Newest</a></li>
-      <li><a class="dropdown-item" href="{{ url_for('oldest') }}">Oldest</a></li>
-      <li><a class="dropdown-item" href="{{ url_for('completed') }}">Completed</a></li>
-      <li><a class="dropdown-item" href="{{ url_for('uncompleted') }}">Uncompleted</a></li>
+      <li>
+        <a class="dropdown-item" href="{{ url_for('close_due') }}"
+          >Closest Due!</a
+        >
+      </li>
+      <li>
+        <a class="dropdown-item" href="{{ url_for('newest') }}">Newest</a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="{{ url_for('oldest') }}">Oldest</a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="{{ url_for('completed') }}">Completed</a>
+      </li>
+      <li>
+        <a class="dropdown-item" href="{{ url_for('uncompleted') }}"
+          >Uncompleted</a
+        >
+      </li>
     </ul>
   </div>
-
-  {% if tasks.items|length < 1 %}
-
-  <div id="welcome">
-    <p class="h2">Welcome to To-do Flask!</p>
-    <p class="h3">Make an account today!</p>
-    <p class="h3">Track every task in your busy life and never lose track!</p>
-  </div>
-
-  {% else %}
-
   <div class="row">
     {% for task in tasks.items %}
 
@@ -106,8 +114,13 @@
     >
     {% endif %} {% else %} ...{% endif %} {% endfor %} {% endif %}
   </div>
-
-  {% for task in tasks.items%}
+  {% else %}
+  <div id="welcome">
+    <p class="h2">Welcome to To-do Flask!</p>
+    <p class="h3">Make an account today!</p>
+    <p class="h3">Track every task in your busy life and never lose track!</p>
+  </div>
+  {% endif %} {% for task in tasks.items%}
   <!-- Delete Modal -->
   <div
     class="modal"
