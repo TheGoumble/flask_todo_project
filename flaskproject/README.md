@@ -9,7 +9,7 @@
 In Terminal:
 pip (or pip3) install -r requirements.txt (this depends on how your system is set up)
 ```
-## Make sure the project files arragned as such
+## Make sure the project files are arragned as such
 
 ![Screen shot of the Directory](static/png/Directory.png)
 ## Create Date Base
